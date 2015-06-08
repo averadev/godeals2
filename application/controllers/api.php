@@ -33,13 +33,19 @@ class Api extends REST_Controller {
         // Verificamos parametros y acceso
         $message = null;
         if ($message == null) {
-            // Obtener cupones
+            
+            // Verificar Mac
+            $macAd = "";
+            if ($this->get('mac') != null){
+                $macAd = $this->get('mac');
+            }
+            
             if ($this->get('fbId') == ''){
                 $data = $this->api_db->verifyEmail($this->get('email'));
                 if (count($data) > 0){
                     $message = array('success' => false, 'message' => 'El email ya fue registrado anteriormente.');
                 }else{
-                    $idApp = $this->api_db->insert(array('email' => $this->get('email'), 'password' => $this->get('password')));
+                    $idApp = $this->api_db->insert(array('email' => $this->get('email'), 'password' => $this->get('password'), 'mac' => $macAd));
                     $message = array('success' => true, 'idApp' => $idApp, 'message' => 'El usuario fue registrado exitosamente');
                 }
             }else{
@@ -51,10 +57,10 @@ class Api extends REST_Controller {
 						$birthday = "0000-00-00";
 					}
                 if (count($data) > 0){
-                    $this->api_db->update(array('email' => $this->get('email'), 'name' => $this->get('name'), 'fbId' => $this->get('fbId'), 'birthday' => $birthday));
+                    $this->api_db->update(array('email' => $this->get('email'), 'name' => $this->get('name'), 'fbId' => $this->get('fbId'), 'mac' => $macAd, 'birthday' => $birthday));
                     $message = array('success' => true, 'idApp' => $data[0]->id, 'message' => 'El usuario fue registrado exitosamente');
                 }else{
-                    $idApp = $this->api_db->insert(array('email' => $this->get('email'), 'name' => $this->get('name'), 'fbId' => $this->get('fbId'), 'birthday' => $birthday));
+                    $idApp = $this->api_db->insert(array('email' => $this->get('email'), 'name' => $this->get('name'), 'fbId' => $this->get('fbId'), 'mac' => $macAd, 'birthday' => $birthday));
                     $message = array('success' => true, 'idApp' => $idApp, 'message' => 'El usuario fue registrado exitosamente');
                 }
             }
@@ -413,6 +419,32 @@ class Api extends REST_Controller {
 	public function getCityById_get(){
 		$items = $this->api_db->getCityById($this->get('city'));
         $message = array('success' => true, 'items' => $items);
+        $this->response($message, 200);
+	}
+    
+    /**
+	 * obtiene el nombre de la ciudad
+	 */
+	public function lealtadIOS_get(){
+        $items = $this->api_db->lealtadIOS(
+                array('date' => gmdate('Y-m-d', $this->get('fecha')), 'aliasPartner' => $this->get('idBeacon'), 'idUser' => $this->get('idApp')));
+        $message = array('success' => true);
+        $this->response($message, 200);
+	}
+	
+	/**
+	 * obtiene el nombre de la ciudad
+	 */
+	public function initApp_get(){
+        $items = $this->api_db->isInitApp($this->get('idApp'));
+        
+        if( count($items) == 0 ){
+            $hoy = getdate();
+            $strHoy = $hoy["year"]."-".$hoy["mon"]."-".$hoy["mday"];
+            $items = $this->api_db->setInitApp(
+                array('idUser' => $this->get('idApp'), 'fecha' => $strHoy));
+        }
+        $message = array('success' => true);
         $this->response($message, 200);
 	}
 	

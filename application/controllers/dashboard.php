@@ -25,87 +25,109 @@ class Dashboard extends CI_Controller {
     }
 
     /**
-     * Despliega la pantalla de eventos
+     * Despliega la pantalla de dashboard
      */
-    
 	public function index($offset = 0){        
         $data['page'] = 'dashboard';
 		$data['nameUser'] = $this->session->userdata('username'); 
-		$data['DealsT'] = $this->dashboard_db->getDeals();
-		$data['DealsTW'] = $this->dashboard_db->getDealsWeek();
-		$data['DealsR'] = $this->dashboard_db->getDealsRedeemed();
-		$data['DealsRW'] = $this->dashboard_db->getDealsRedeemedWeek();
+		$data['DealsD'] = $this->sliceArray($this->dashboard_db->getDealsDescargados(), 10);
+        $data['DealsR'] = $this->sliceArray($this->dashboard_db->getDealsRedimidos(), 10);
+        $data['DealsActivos'] = $this->dashboard_db->getDealsActivos()[0]->total;
+        $data['TotalUser'] = $this->dashboard_db->getTotalUser()[0]->total;
         $this->load->view('admin/vwDashboard',$data);
 	}
-	
-	/**
-     * Obtiene un array sorting and sliced
+    
+    /**
+     * Obtiene los datos de la grafica
      */
-    public function sortSliceArray($array, $count){
-		//slice
+    public function getDownloadAll(){
+		if($this->input->is_ajax_request()){
+            $array = $this->dashboard_db->getDownloadAll();
+            
+            $label = array();
+            $total = array();
+            $months = array('', 'Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic');
+            // Set extra data
+            foreach ($array as $item):
+                array_push($label, date('d', strtotime($item->fecha)) . '-' . $months[date('n', strtotime($item->fecha))]);
+                array_push($total, $item->total);
+            endforeach;
+            
+            echo json_encode(array('label' => $label, 'total' => $total));
+        }
+	}
+    
+    /**
+     * Obtiene los datos de la grafica
+     */
+    public function getRedimidosAll(){
+		if($this->input->is_ajax_request()){
+            $array = $this->dashboard_db->getRedimidosAll();
+            
+            $label = array();
+            $total = array();
+            $months = array('', 'Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic');
+            // Set extra data
+            foreach ($array as $item):
+                array_push($label, date('d', strtotime($item->fecha)) . '-' . $months[date('n', strtotime($item->fecha))]);
+                array_push($total, $item->total);
+            endforeach;
+            
+            echo json_encode(array('label' => $label, 'total' => $total));
+        }
+	}
+    
+    /**
+     * Obtiene los datos de la grafica
+     */
+    public function getNewUsuariosAll(){
+		if($this->input->is_ajax_request()){
+            $array = $this->dashboard_db->getNewUsuariosAll();
+            
+            $label = array();
+            $total = array();
+            $months = array('', 'Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic');
+            // Set extra data
+            foreach ($array as $item):
+                array_push($label, date('d', strtotime($item->fecha)) . '-' . $months[date('n', strtotime($item->fecha))]);
+                array_push($total, $item->total);
+            endforeach;
+            
+            echo json_encode(array('label' => $label, 'total' => $total));
+        }
+	}
+    
+    /**
+     * Obtiene los datos de la grafica
+     */
+    public function getActivesAll(){
+		if($this->input->is_ajax_request()){
+            $array = $this->dashboard_db->getActivesAll();
+            
+            $label = array();
+            $total = array();
+            $months = array('', 'Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic');
+            // Set extra data
+            foreach ($array as $item):
+                array_push($label, date('d', strtotime($item->fecha)) . '-' . $months[date('n', strtotime($item->fecha))]);
+                array_push($total, $item->total);
+            endforeach;
+            
+            echo json_encode(array('label' => $label, 'total' => $total));
+        }
+	}
+    
+    /**
+     * Obtiene un array Sliced
+     */
+    public function sliceArray($array, $count){
+        // Slice
         if (count($array) > $count){
             $array = array_slice($array, 0, $count);
         }
         return $array;
     }
 	
-	 public function totalArray($array){
-        $array = count($array);
-        return $array;
-    }
 	
-	public function getDownloadByDate(){
-		if($this->input->is_ajax_request()){
-			$downloads = $this->dashboard_db->getDownloadByDate($_POST['iniDate'],$_POST['endDate']);
-			$redimir = $this->dashboard_db->getRedimirByDate($_POST['iniDate'],$_POST['endDate']);	
-			echo json_encode(array('downloads' => $downloads, 'redimir' => $redimir));
-		}
-	}
-	
-	public function getDealsByPartner(){
-		if($this->input->is_ajax_request()){
-			$downloads = $this->dashboard_db->getAllDealsPartner($_POST['idPartner']);
-			$redimir = $this->dashboard_db->getAllRedimirPartner($_POST['idPartner']);
-			echo json_encode(array('downloads' => $downloads, 'redimir' => $redimir));
-		}
-	}
-	
-	public function getDealsByPartnerAndDate(){
-		if($this->input->is_ajax_request()){
-			$downloads = $this->dashboard_db->getDealsByPartnerAndDate($_POST['idPartner'],$_POST['iniDate'],$_POST['endDate']);
-			$redimir = $this->dashboard_db->getRedimirByPartnerAndDate($_POST['idPartner'],$_POST['iniDate'],$_POST['endDate']);
-			echo json_encode(array('downloads' => $downloads, 'redimir' => $redimir));
-		}
-	}
-	
-	/*******************************/
-	
-	public function createReportDeals(){
-		
-		if($_POST['reportAllDeas'] != ""){
-			$AllDeals = $_POST['reportAllDeas'];
-			$AllDEalsPart = explode(",", $AllDeals);
-		}else{
-			$AllDEalsPart = 0;
-		}
-		
-		if($_POST['reportAllDeasDate'] != ""){
-			$reportAllDeasDate = $_POST['reportAllDeasDate'];
-			$AllDEalsDatePart = explode(",", $reportAllDeasDate);
-		}else{
-			$AllDEalsDatePart = 0;
-		}
-		
-		if($_POST['reportPartnerDeas'] != ""){
-			
-			$reportPartnerDeas = $_POST['reportPartnerDeas'];
-			$PartnerDeas = explode(",", $reportPartnerDeas);
-			
-		}else{
-			$PartnerDeas = 0;	
-		}
-		
-		$this->excel_pdf_manager->export($AllDEalsPart,$AllDEalsDatePart,$PartnerDeas);
-	}
 	
 }

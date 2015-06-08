@@ -78,6 +78,32 @@ Class api_db extends CI_MODEL
 	 function insertClienteCoupon($data){
 		$this->db->insert('xref_cliente_cupon', $data);
 	 }
+    
+    /**
+	 * verifica si el usuario accedio este dia
+	 */
+	 function isInitApp($idApp){
+		$this->db->from('init_app');
+        $this->db->where('idUser', $idApp);
+        $this->db->where('fecha = curdate()');
+        return $this->db->get()->result();
+	 }
+    
+    /**
+	 * registra si el usuario accedio este dia
+	 */
+	 function setInitApp($data){
+         $this->db->insert('init_app', $data);
+        return $this->db->insert_id();
+	 }
+    
+    /**
+	 * registra si el usuario accedio este dia
+	 */
+	 function lealtadIOS($data){
+         $this->db->insert('xref_beacon_ios', $data);
+        return $this->db->insert_id();
+	 }
 	
 	/**
 	 *
@@ -131,7 +157,7 @@ Class api_db extends CI_MODEL
     }
     
     public function getPartnertById($id){
-        $this->db->select('name, image, banner, info, address, phone, latitude, longitude, facebook, twitter, welcomeIntro, welcomeFooter');
+        $this->db->select('name, image, banner, info, address, phone, latitude, longitude, facebook, twitter');
         $this->db->from('partner');
         $this->db->where('id', $id);
         return  $this->db->get()->result();
