@@ -1,0 +1,215 @@
+@charset "utf-8";
+/* CSS Document */
+
+@font-face {
+    font-family: "Lato-Light";
+    src: url(Lato-Light.ttf) format("truetype");
+}
+
+html{
+	background: #11394c;
+}
+
+html,body {
+	height:100%;
+	background: #11394c;
+	font-family:"Lato-Light";
+}
+
+body {
+	/*background:#86B4CC;*/
+	
+	background: rgba(10,81,115,1);
+background: -moz-linear-gradient(top, rgba(10,81,115,1) 0%, rgba(10,81,115,1) 53%, rgba(17,57,76,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(10,81,115,1)), color-stop(53%, rgba(10,81,115,1)), color-stop(100%, rgba(17,57,76,1)));
+background: -webkit-linear-gradient(top, rgba(10,81,115,1) 0%, rgba(10,81,115,1) 53%, rgba(17,57,76,1) 100%);
+background: -o-linear-gradient(top, rgba(10,81,115,1) 0%, rgba(10,81,115,1) 53%, rgba(17,57,76,1) 100%);
+background: -ms-linear-gradient(top, rgba(10,81,115,1) 0%, rgba(10,81,115,1) 53%, rgba(17,57,76,1) 100%);
+background: linear-gradient(to bottom, rgba(10,81,115,1) 0%, rgba(10,81,115,1) 53%, rgba(17,57,76,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0a5173', endColorstr='#11394c', GradientType=0 );
+	
+}
+
+/*#headerLogin{
+	background:#090;
+	height:60px;
+}*/
+
+#separadorL{
+	margin-bottom:5px;	
+}
+
+#divAlertLogin{
+	padding-top:10px;
+	height:60px;
+}
+
+.bgLogin{
+	width:425px;
+	height:325px;
+	background:#103c50;
+	border-radius:5px;
+	/*padding-top:60px;*/
+	padding-left:60px;
+	padding-right:64px;
+}
+
+#bgBtnRegister{
+	height:95px;
+	text-align:center;
+}
+
+#txtUser, #txtPassword, #txtEmail, #txtPartner{
+	height:45px;
+	width:300px;
+	margin:0;
+}
+
+#txtObservation{
+	width:300px;	
+}
+
+#lblUSer, #lblPassword{
+	font:inherit;
+	font-size:100%;
+	color:#787878;
+	padding:10px;
+}
+
+#btnSignIn{
+	margin-top:25px;
+	width:300px;
+	height:45px;
+	background:#2577B6;
+	border-radius:7px;
+	border:none;
+	cursor:pointer;
+	color:#FFF;
+	font-size:18px;
+	font-family:"Lato-Light";
+}
+
+#btnSignIn:hover{
+	background:#0E62A3;
+	font-family:"Lato-Light";
+}
+
+#btnRegisterPartner{
+	height:45px;
+	width:150px;
+	border-radius:5px;
+	background:#2577B6;
+	border:0;
+	cursor:pointer;
+	color:#FFF;
+	font-size:14px;
+	font-family:"Lato-Light";
+}
+
+.btnLogin{
+	margin-top:5px;
+	width:300px;
+	height:45px;
+	background:#2577B6;
+	border-radius:5px;
+	border:none;
+	cursor:pointer;
+	color:#FFF;
+	font-family:"Lato-Light";
+}
+
+#formRegister{
+	display:none;	
+}
+
+#formRemenberPassword{
+	height:250px;
+	display:none;	
+}
+
+.btnRegister{
+	margin-top:5px;
+	width:145px;
+	height:45px;
+	background:#2577B6;
+	border-radius:5px;
+	border:none;
+	cursor:pointer;
+	color:#FFF;
+}
+
+#btnCancelRegister, #btnCancelRemenber{
+	background:#F00;	
+}
+
+#labelRegister{
+	margin-top:25px;
+	font-size:12px;
+	color:#87D67A;
+	margin-bottom:0;
+}
+
+#labelRememberPassword{
+	margin-top:25px;
+	color:#87D67A;
+	font-size:12px;
+	text-align:center;
+	text-decoration:underline;
+	cursor:pointer;¿
+}
+
+#divFooter{
+	background:rgba(0, 0, 0, 0.5);
+	height:50px;
+	position:fixed;
+	bottom:0;
+	text-align:center;
+	padding-top:7px;
+}
+
+/*media para tables*/
+
+@media only screen and (min-width: 40.063em) and (max-width: 64em) { 
+	#bgLogin{
+		width:100%;	
+		padding-left:10%;
+		padding-right:10%;
+	}
+	
+	#txtUser, #txtPassword{
+		width:100%;
+	}
+	
+	#btnSignIn{
+		width:100%;
+	}
+	
+	#divFooter{
+		margin-top:50px;	
+	}
+}
+
+/*media para celulares*/
+@media only screen and (max-width: 40em) {
+	#bgLogin{
+		width:100%;	
+		padding-left:10%;
+		padding-right:10%;
+	}
+	
+	#txtUser, #txtPassword, #txtEmail, #txtPartner, #txtObservation{
+		width:100%;
+	}
+	
+	#btnSignIn{
+		width:100%;
+	}
+	
+	#divFooter{
+		margin-top:50px;	
+	}
+	
+	.btnRegister{
+		width:45%;	
+	}
+}
