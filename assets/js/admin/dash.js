@@ -120,3 +120,82 @@ function getRedimidosAll(){
 	});
 }
 
+
+/////////////////////////////////////////////////////
+/////////////////////MODAL///////////////////////////
+/////////////////////////////////////////////////////
+
+var dialogDash;
+
+//creacion del modal
+dialogDash = $( "#dialogDash-form" ).dialog({
+   	autoOpen: false,
+     height: "auto",
+     width: "80%",
+     modal: true,
+     buttons: {
+        Cancel: function() {
+          dialogDash.dialog( "close" );
+        }
+   	},
+   	close: function() {
+   	}
+});
+
+////////////////////index////////////////////////////
+
+$(document).on('click','.btnShowDialogDash',function(){ showDialogDash($(this).attr('id')); });
+
+$('#btnSearchTotalDeals').click(function(){ SearchTotalDeals($(this).attr('value')); });
+
+////////////////////funciones////////////////////////
+
+function showDialogDash(idBtn){
+	//alert(idBtn)
+	$('#txtDashIniDate').val("");
+	$('#txtDashEndDate').val("");
+	$('#btnSearchTotalDeals').attr('value',idBtn)
+	var url;
+	if(idBtn == "dealsDescargado"){
+		url	= "dashboard/getDealsDescargadosDate";
+	}else{
+		url	= "dashboard/getDealsRedimidosDate";
+	}
+	getDealsByDate(1,1,0,url);
+	
+}
+
+function SearchTotalDeals(idBtn){
+	var url;
+	if(idBtn == "dealsDescargado"){
+		url	= "dashboard/getDealsDescargadosDate";
+	}else{
+		url	= "dashboard/getDealsRedimidosDate";
+	}
+	getDealsByDate($('#txtDashIniDate').val(),$('#txtDashEndDate').val(),1,url);
+}
+
+function getDealsByDate(iniDate,endDate,type,url){
+	dialogDash.dialog( "open" );
+	$.ajax({
+		type: "POST",
+		url: url,
+		dataType:'json',
+		data:{
+			iniDate:iniDate,
+			endDate:endDate,
+			type:type
+		},
+		success: function(data){
+			$('#tableDashModal tbody').empty();
+			for(i = 0;i<data.length;i++){
+				$('#tableDashModal tbody').append(
+					'<tr>' +
+						'<td>' + data[i].name + '</td>' +
+						'<td>' + data[i].total + '</td>' +
+					'</tr>'
+				);
+			}
+        }
+	});	
+}

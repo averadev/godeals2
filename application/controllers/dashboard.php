@@ -128,6 +128,24 @@ class Dashboard extends CI_Controller {
         return $array;
     }
 	
+	/**
+	 * Obtiene el todal de deals descargado por fecha
+	 */
+	public function getDealsDescargadosDate(){
+		if($this->input->is_ajax_request()){
+			$data = $this->dashboard_db->getDealsDescargadosDate($_POST['iniDate'],$_POST['endDate'],$_POST['type']);
+			echo json_encode($data);
+		}
+	}
 	
+	/**
+	 * Obtiene el todal de deals redimidos por fecha
+	 */
+	public function getDealsRedimidosDate(){
+		if($this->input->is_ajax_request()){
+			$data = $this->dashboard_db->getDealsRedimidosDate($_POST['iniDate'],$_POST['endDate'],$_POST['type']);
+			echo json_encode($data);
+		}
+	}
 	
 }
