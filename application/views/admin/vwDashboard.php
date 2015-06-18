@@ -22,7 +22,7 @@ $this->load->view('admin/vwHeader');
                                     <input type="text" value="Total de usuarios: <?php echo $TotalUser;?>" readonly>
                                 </div>
                                 <div class="small-2 columns">
-                                    <a href="#" class="button postfix" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
+                                    <a id="btnShowTotalUser" class="button postfix" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@ $this->load->view('admin/vwHeader');
                                     <input type="text" value="Deals Activos: <?php echo $DealsActivos;?>" readonly>
                                 </div>
                                 <div class="small-2 columns">
-                                    <a href="#" class="button postfix" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
+                                    <a id="btnShowDealsActive" class="button postfix" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
                                 </div>
                             </div>
                             
@@ -76,7 +76,7 @@ $this->load->view('admin/vwHeader');
                                             <input type="text" value="Deals descargados: 123" readonly>
                                         </div>
                                         <div class="small-2 columns">
-                                            <a  id="dealsDescargado" class="button postfix btnShowDialogDash" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;a</a>
+                                            <a  id="dealsDescargado" class="button postfix btnShowDialogDash" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
                                         </div>
                                         <canvas id="ctxDealDownloaded" height="300" style="width: 100%; margin-top: -20px; background-color: #ffffff;"></canvas>
                                     </div>
@@ -90,7 +90,7 @@ $this->load->view('admin/vwHeader');
                                             <input type="text" value="Deals redimidos: 86" readonly>
                                         </div>
                                         <div class="small-2 columns">
-                                            <a id="dealsRedimidos" class="button postfix btnShowDialogDash" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;b</a>
+                                            <a id="dealsRedimidos" class="button postfix btnShowDialogDash" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
                                         </div>
                                         <canvas id="ctxDealDReden" height="300" style="width: 100%; margin-top: -20px; background-color: #ffffff;"></canvas>
                                     </div>
@@ -147,14 +147,15 @@ $this->load->view('admin/vwHeader');
             </div>
         </form>
         
-        <div id="dialogDash-form" title="Reportes deals">
+		<!----------deals por fechas----------->
+        <div id="dialogDash-form" title="Reporte de deals">
         	
             <div class="row">
-              	<div class="large-8 large-centered columns">
+              	<div class="large-12 large-centered columns">
 					<!----Campos de fecha----->
              		<div class="row" style="margin-top:20px;">
                     	<!------->
-                    	<div class="small-6 medium-6 large-5 columns">
+                    	<div class="small-6 medium-6 large-3 columns">
 							<label id="labelDashIniDate"><strong>*Fecha de inicio</strong>
 								<input type="date" id="txtDashIniDate" class="radius"/>
 							</label>
@@ -163,7 +164,7 @@ $this->load->view('admin/vwHeader');
 							</small>
 						</div>
                         <!----->
-                       	<div class="small-6 medium-6 large-5 columns">
+                       	<div class="small-6 medium-6 large-3 columns">
 							<label id="labelDashEndDate"><strong>*Fecha fin</strong>
 								<input type="date" id="txtDashEndDate" class="radius"/>
 							</label>
@@ -178,18 +179,21 @@ $this->load->view('admin/vwHeader');
                             	Buscar
                           	</a>
                         </div>
+                        <div class="small-2 medium-2 large-4 columns"></div>
                         <!-------->
                     </div>
 					<!----fin campos fecha----->
 					<!----tabla del modal------>
 					<div class="row" style="margin-top:20px;">
                     	<div class="small-6 medium-6 large-12 columns">
-							<table id="tableDashModal" style="margin-top: 10px;">
+							<table id="tableDashModal" style="margin-top: 10px;" width="100%">
 								<thead>
 									<tr>
-										<td class="titulo" id="titleTableDashModal" colspan="2">Deals</td>
+										<td class="titulo" id="titleTableDashModal" colspan="3">Deals</td>
 									</tr>
 									<tr>
+										<th>#</th>
+                                    	<th>Descripcion</th>
 										<th>Comercio</th>
 										<th># Deals</th>
 									</tr>
@@ -198,6 +202,8 @@ $this->load->view('admin/vwHeader');
                                 	
 								</tbody>
 							</table>
+                            <ul class="pagination" id="paginatorDashDealsByDate">
+							</ul>
                         </div>
                     </div>
 					<!-----fin tabla modal------->
@@ -205,7 +211,74 @@ $this->load->view('admin/vwHeader');
 			</div>
             
         </div>
-        
+		<!-------fin modal deals por fechas---------->
+		
+		<!-------modal deals activos---------->
+		<div id="dialogDashDealsActive" title="Deals activos">
+            <div class="row">
+              	<div class="large-12 large-centered columns">
+					<!----tabla del modal------>
+					<div class="row" style="margin-top:20px;">
+                    	<div class="small-6 medium-6 large-12 columns">
+							<table id="tableModalDealsActive" style="margin-top: 10px;" width="100%">
+								<thead>
+									<tr>
+										<td class="titulo" id="titleTableDashModal" colspan="5">Deals activos</td>
+									</tr>
+									<tr>
+										<th>#</th>
+                                    	<th>Descripcion</th>
+										<th>Comercio</th>
+										<th>Total</th>
+										<th>Stock</th>
+									</tr>
+								</thead>
+								<tbody>
+                                	
+								</tbody>
+							</table>
+                            <ul class="pagination" id="paginatorDashDealsActive">
+							</ul>
+                        </div>
+                    </div>
+					<!-----fin tabla modal------->
+				</div>
+			</div>
+        </div>
+		<!-------fin modal de deals activos---------->
+		
+		<!-------modal deals activos---------->
+		<div id="dialogDashTotalUser" title="Total de usuarios">
+            <div class="row">
+              	<div class="large-12 large-centered columns">
+					<!----tabla del modal------>
+					<div class="row" style="margin-top:20px;">
+                    	<div class="small-6 medium-6 large-12 columns">
+							<table id="tableModalTotalUser" style="margin-top: 10px;" width="100%">
+								<thead>
+									<tr>
+										<td class="titulo" id="titleTableDashModal" colspan="5">Total de usuarios</td>
+									</tr>
+									<tr>
+										<th>#</th>
+                                    	<th>email</th>
+										<th>name</th>
+									</tr>
+								</thead>
+								<tbody>
+                                	
+								</tbody>
+							</table>
+                            <ul class="pagination" id="paginatorDashTotalUser">
+							</ul>
+                        </div>
+                    </div>
+					<!-----fin tabla modal------->
+				</div>
+			</div>
+        </div>
+		<!-------fin modal de deals activos---------->
+		
         
     </div>
     <div class="small-12 medium-12 large-10 columns divContentInfo" id="vwCatalogDeals">
@@ -217,6 +290,15 @@ $this->load->view('admin/vwHeader');
 	</div>
 	
 </div>
+
+<style>
+	
+	.dialogDash .ui-dialog-titlebar{
+		color:#FFF;	
+		background:#000;
+	}
+	
+</style>
 
 <!----sub menu movil despegable--->
 <div class="opcionMenuLeftMovil">

@@ -175,7 +175,7 @@ Class dashboard_db extends CI_MODEL
 	 * Obtiene los deals descargados por fecha
 	 */
 	public function getDealsDescargadosDate($iniDate,$endDate,$type){
-        $this->db->select('partner.name, count(*) as total');
+        $this->db->select('partner.name, count(*) as total, coupon.name as descripcion');
         $this->db->from('partner');
         $this->db->join('coupon', 'partner.id = coupon.partnerId', 'inner');
         $this->db->join('xref_cliente_cupon', 'coupon.id = xref_cliente_cupon.idCupon', 'inner');
@@ -187,8 +187,8 @@ Class dashboard_db extends CI_MODEL
 			$this->db->where('xref_cliente_cupon.date >= DATE_ADD(CURDATE(), INTERVAL -7 DAY)');
 			$this->db->where('xref_cliente_cupon.date <= CURDATE()');
 		}
-        $this->db->group_by('partner.id'); 
-		$this->db->order_by("total", "desc");
+        $this->db->group_by('coupon.id'); 
+		$this->db->order_by("partner.name", "ASC");
 		return  $this->db->get()->result();
 	}
 	
@@ -196,7 +196,7 @@ Class dashboard_db extends CI_MODEL
 	 * Obtiene los deals descargados por fecha
 	 */
 	public function getDealsRedimidosDate($iniDate,$endDate,$type){
-        $this->db->select('partner.name, count(*) as total');
+        $this->db->select('partner.name, count(*) as total, coupon.name as descripcion');
         $this->db->from('partner');
         $this->db->join('coupon', 'partner.id = coupon.partnerId', 'inner');
         $this->db->join('xref_cliente_cupon', 'coupon.id = xref_cliente_cupon.idCupon', 'inner');
@@ -208,8 +208,31 @@ Class dashboard_db extends CI_MODEL
 			$this->db->where('xref_cliente_cupon.redemptionDate >= DATE_ADD(CURDATE(), INTERVAL -7 DAY)');
 			$this->db->where('xref_cliente_cupon.redemptionDate <= CURDATE()');
 		}
-        $this->db->group_by('partner.id'); 
-		$this->db->order_by("total", "desc");
+        $this->db->group_by('coupon.id'); 
+		$this->db->order_by("partner.name", "ASC");
+		return  $this->db->get()->result();
+	}
+	
+	 /**
+     * Obtiene los datos de deals activos
+     */
+	public function getInfoDealsActivos(){
+        $this->db->select('coupon.name, coupon.total, coupon.stock');
+		$this->db->select('partner.name as partnerName');
+        $this->db->from('coupon');
+		$this->db->join('partner', 'partner.id = coupon.partnerId', 'inner');
+        $this->db->where('coupon.status = 1');
+        $this->db->where('coupon.iniDate <= curdate()');
+        $this->db->where('coupon.endDate >= curdate()');
+		return  $this->db->get()->result();
+	}
+	
+	/**
+     * Obtiene la informacion de los usuarios de godeals
+     */
+	public function getInfoTotalUser(){
+        $this->db->select('email, name');
+        $this->db->from('user');
 		return  $this->db->get()->result();
 	}
 

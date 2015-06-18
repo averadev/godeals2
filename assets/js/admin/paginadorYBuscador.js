@@ -8,7 +8,7 @@ var column = "id";
 var idPartnerDeals = 0;
 
 $(document).on('click','.btnPaginador',function(){ 
-	paginador(this); 
+	paginador(this);
 });
 
 $('.arrowUp').click(function() { OrdenarPorFechas("ASC",this); });
@@ -80,7 +80,21 @@ $('.txtSearch').keyup(function(e){
 						$('ul #btnPaginadorReward').removeClass('current');
 						idPartnerDeals = $('#txtPartnerCampana').attr('idP');
 					break;
-
+					case "dashdealsbydate":
+						//alert('conectado')
+						url = "dashboard/getDealsByDatePaginador";
+						$('ul #btnPaginatorDashDealsByDate').removeClass('current');
+					break;
+					case "dashdealsactive":
+						//alert('conectado')
+						url = "dashboard/getInfoDealsActivos";
+						$('ul #btnPaginatorDashDealsActive').removeClass('current');
+					break;
+					case "dashtotaluser":
+						//alert('conectado')
+						url = "dashboard/getInfoTotalUser";
+						$('ul #btnPaginatorDashTotalUser').removeClass('current');
+					break;
                 }
                     
 		$(selecionado).addClass('current');
@@ -102,7 +116,9 @@ $('.txtSearch').keyup(function(e){
 		//obtiene la siguiente lista del paginador
 		cantidad = (cantidad-1) *10;
 		
-		if($(selecionado).attr('id') == "btnPaginadorReward"){
+		if($(selecionado).attr('id') == "btnPaginadorReward" || $(selecionado).attr('id') == "btnPaginatorDashDealsByDate"
+		|| $(selecionado).attr('id') == "btnPaginatorDashDealsActive" 
+		|| $(selecionado).attr('id') == "btnPaginatorDashTotalUser"  ){
 			muestraNuevaTablaCompuesta(url,cantidad,tipo);
 		}else{    
 			muestraNuevaTabla(url,cantidad,tipo);
@@ -867,6 +883,7 @@ function ajaxMostrarTablaCompuesta(tipo,order,url,cantidadEmpezar,tipoTabla){
 }
 
 function muestraNuevaTablaCompuesta(url,cantidad,tipo){
+	
 	 $.ajax({
 		type: "POST",
 		url: url,
@@ -881,6 +898,7 @@ function muestraNuevaTablaCompuesta(url,cantidad,tipo){
 			idPartner:idPartnerDeals
 		},
 		success: function(data){
+			console.log(data)
 			total = data.items.length;
 			switch(tipo){
 				case "reward":     
@@ -917,7 +935,59 @@ function muestraNuevaTablaCompuesta(url,cantidad,tipo){
 							"</tr>"
 						);
 					}
-				break;    
+				break;
+				
+				case "dashdealsbydate":
+					
+					items = data.items;
+					$('#tableDashModal tbody').empty();
+					for(i = 0;i<items.length;i++){
+						num = parseInt(cantidad) + parseInt((i+1));
+						$('#tableDashModal tbody').append(
+						'<tr>' +
+							'<td>' + num + '</td>' +
+							'<td>' + items[i].descripcion + '</td>' +
+							'<td>' + items[i].name + '</td>' +
+							'<td>' + items[i].total + '</td>' +
+						'</tr>'
+						);
+					}
+					
+              	break;
+				
+				case "dashdealsactive":
+					
+					items = data.items;
+					$('#tableModalDealsActive tbody').empty();
+					for(i = 0;i<items.length;i++){
+						num = parseInt(cantidad) + parseInt((i+1));
+						$('#tableModalDealsActive tbody').append(
+							'<tr>' +
+								'<td>' + num + '</td>' +
+								'<td>' + items[i].name + '</td>' +
+								'<td>' + items[i].partnerName + '</td>' +
+								'<td>' + items[i].total + '</td>' +
+								'<td>' + items[i].stock + '</td>' +
+							'</tr>'
+						);
+					}
+					
+              	break;
+				
+				case "dashtotaluser":
+					items = data.items;
+					$('#tableModalTotalUser tbody').empty();
+					for(i = 0;i<items.length;i++){
+						num = parseInt(cantidad) + parseInt((i+1));
+						$('#tableModalTotalUser tbody').append(
+							'<tr>' +
+								'<td>' + num + '</td>' +
+								'<td>' + items[i].email + '</td>' +
+								'<td>' + items[i].name + '</td>' +
+							'</tr>'
+						);
+					}
+              	break;
 			}            	
 		}
 	});	

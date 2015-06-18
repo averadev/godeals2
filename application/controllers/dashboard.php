@@ -134,7 +134,9 @@ class Dashboard extends CI_Controller {
 	public function getDealsDescargadosDate(){
 		if($this->input->is_ajax_request()){
 			$data = $this->dashboard_db->getDealsDescargadosDate($_POST['iniDate'],$_POST['endDate'],$_POST['type']);
-			echo json_encode($data);
+			$array = array_slice($data, 0, 10);
+			$message = array('items' => $array, 'total' => count($data));
+			echo json_encode($message);
 		}
 	}
 	
@@ -144,8 +146,56 @@ class Dashboard extends CI_Controller {
 	public function getDealsRedimidosDate(){
 		if($this->input->is_ajax_request()){
 			$data = $this->dashboard_db->getDealsRedimidosDate($_POST['iniDate'],$_POST['endDate'],$_POST['type']);
-			echo json_encode($data);
+			$array = array_slice($data, 0, 10);
+			$message = array('items' => $array, 'total' => count($data));
+			echo json_encode($message);
 		}
 	}
 	
+	/**
+	 * obtiene los deals por fecha del paginador
+	 */
+	public function getDealsByDatePaginador(){
+		if($this->input->is_ajax_request()){
+			if($_POST['dato2'] == ""){
+				$type = 0;	
+			}else{
+				$type = 1;	
+			}
+			$data = "";
+			if($_POST['dato4'] == 1){
+				$data = $this->dashboard_db->getDealsDescargadosDate($_POST['dato2'],$_POST['dato3'],$type);
+			}else{
+				$data = $this->dashboard_db->getDealsRedimidosDate($_POST['dato2'],$_POST['dato3'],$type);
+			}
+			
+			$array = array_slice($data,$_POST['cantidad'], 10);
+			$message = array('items' => $array, 'total' => count($data));
+			echo json_encode($message);
+		}
+	} 
+	
+	/**
+	 * Obtiene los datos de los deals activos
+	 */
+	public function getInfoDealsActivos(){
+		if($this->input->is_ajax_request()){
+			$data = $this->dashboard_db->getInfoDealsActivos();
+			$array = array_slice($data,$_POST['cantidad'], 10);
+			$message = array('items' => $array, 'total' => count($data));
+			echo json_encode($message);
+		}
+	}
+	
+	/**
+	 * obtiene la informacion de los usuarios de la app
+	 */
+	public function getInfoTotalUser(){
+		if($this->input->is_ajax_request()){
+			$data = $this->dashboard_db->getInfoTotalUser();
+			$array = array_slice($data,$_POST['cantidad'], 10);
+			$message = array('items' => $array, 'total' => count($data));
+			echo json_encode($message);
+		}
+	}
 }
