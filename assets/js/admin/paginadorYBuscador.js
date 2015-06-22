@@ -95,6 +95,16 @@ $('.txtSearch').keyup(function(e){
 						url = "dashboard/getInfoTotalUser";
 						$('ul #btnPaginatorDashTotalUser').removeClass('current');
 					break;
+					case "dashnewusers":
+						//alert('conectado')
+						url = "dashboard/getInfoNewUser";
+						$('ul #btnPaginatorDashNewUsers').removeClass('current');
+					break;
+					case "dashactiveusers":
+						//alert('conectado')
+						url = "dashboard/getInfoActiveUser";
+						$('ul #btnPaginatorDashActiveUsers').removeClass('current');
+					break;
                 }
                     
 		$(selecionado).addClass('current');
@@ -117,8 +127,11 @@ $('.txtSearch').keyup(function(e){
 		cantidad = (cantidad-1) *10;
 		
 		if($(selecionado).attr('id') == "btnPaginadorReward" || $(selecionado).attr('id') == "btnPaginatorDashDealsByDate"
-		|| $(selecionado).attr('id') == "btnPaginatorDashDealsActive" 
-		|| $(selecionado).attr('id') == "btnPaginatorDashTotalUser"  ){
+			|| $(selecionado).attr('id') == "btnPaginatorDashDealsActive" 
+			|| $(selecionado).attr('id') == "btnPaginatorDashTotalUser"
+			|| $(selecionado).attr('id') == "btnPaginatorDashNewUsers"
+			|| $(selecionado).attr('id') == "btnPaginatorDashActiveUsers"
+		){
 			muestraNuevaTablaCompuesta(url,cantidad,tipo);
 		}else{    
 			muestraNuevaTabla(url,cantidad,tipo);
@@ -481,6 +494,12 @@ $('.txtSearch').keyup(function(e){
 					$('#tableCoupon tbody').empty();
 				}else if(tipoTabla == "campana"){
 					$('#tableCampanaLealtad tbody').empty();
+				}else if(tipoTabla == "typeuser"){
+					$('#tableModalTotalUser tbody').empty();
+				}else if(tipoTabla == "dnewusers"){
+					$('#tableModalNewUsers tbody').empty();
+				}else if(tipoTabla == "dactiveusers"){
+					$('#tableModalActiveUsers tbody').empty();
 				}
                                 
 				$('.pagination').empty();
@@ -662,6 +681,75 @@ $('.txtSearch').keyup(function(e){
 							"</tr>");
 						btnPaginador = "btnPaginadorPromo";
                         break;
+						
+						case "typeuser":
+						
+							var nameUser = "Sin nombre de usuario"
+							if(data[num].name != null){
+								nameUser = data[num].name;	
+							}
+							var lastDatesUser = "Sin ultima conexion"
+							if(data[num].lastDate != null){
+								lastDatesUser = data[num].lastDate;	
+							}
+							$('#tableModalTotalUser tbody').append(
+								'<tr>' +
+									'<td>' + (num+1) + '</td>' +
+									'<td>' + data[num].email + '</td>' +
+									'<td>' + nameUser + '</td>' +
+									'<td>' + lastDatesUser + '</td>' +
+								'</tr>'
+							);
+							
+							btnPaginador = "btnPaginatorDashTotalUser";
+						
+                        break;
+						
+						case "dnewusers":
+						
+							var nameUser = "Sin nombre de usuario"
+							if(data[num].name != null){
+								nameUser = data[num].name;	
+							}
+							var lastDatesUser = "Sin ultima conexion"
+							if(data[num].lastDate != null){
+								lastDatesUser = data[num].lastDate;	
+							}
+							$('#tableModalNewUsers tbody').append(
+								'<tr>' +
+									'<td>' + (num+1) + '</td>' +
+									'<td>' + data[num].email + '</td>' +
+									'<td>' + nameUser + '</td>' +
+									'<td>' + lastDatesUser + '</td>' +
+								'</tr>'
+							);
+							
+							btnPaginador = "btnPaginatorDashNewUsers";
+						
+                        break;
+						
+						case "dactiveusers":
+						
+							var nameUser = "Sin nombre de usuario"
+							if(data[num].name != null){
+								nameUser = data[num].name;	
+							}
+							var lastDatesUser = "Sin ultima conexion"
+							if(data[num].lastDate != null){
+								lastDatesUser = data[num].lastDate;	
+							}
+							$('#tableModalActiveUsers tbody').append(
+								'<tr>' +
+									'<td>' + (num+1) + '</td>' +
+									'<td>' + data[num].email + '</td>' +
+									'<td>' + nameUser + '</td>' +
+									'<td>' + lastDatesUser + '</td>' +
+								'</tr>'
+							);
+							
+							btnPaginador = "btnPaginatorDashActiveUsers";
+						
+                        break;
 					}
                 }
 							
@@ -751,6 +839,18 @@ $('.txtSearch').keyup(function(e){
 					case "campana":
                         palabra = $('#txtSearchCampana').val();
 						url = "lealtad/getallSearchCampana";
+                    break;
+					case "typeuser":
+                        palabra = $('#txtSearchTypeUser').val();
+						url = "dashboard/getInfoTotalUserBySearch";
+                    break;
+					case "dnewusers":
+                        palabra = $('#txtSearchDNewUsers').val();
+						url = "dashboard/getInfoNewUserBySearch";
+                    break;
+					case "dactiveusers":
+                        palabra = $('#txtSearchDActiveUsers').val();
+						url = "dashboard/getInfoActiveUserBySearch";
                     break;
                 }
 		
@@ -898,7 +998,6 @@ function muestraNuevaTablaCompuesta(url,cantidad,tipo){
 			idPartner:idPartnerDeals
 		},
 		success: function(data){
-			console.log(data)
 			total = data.items.length;
 			switch(tipo){
 				case "reward":     
@@ -966,8 +1065,8 @@ function muestraNuevaTablaCompuesta(url,cantidad,tipo){
 								'<td>' + num + '</td>' +
 								'<td>' + items[i].name + '</td>' +
 								'<td>' + items[i].partnerName + '</td>' +
-								'<td>' + items[i].total + '</td>' +
 								'<td>' + items[i].stock + '</td>' +
+								'<td>' + items[i].total + '</td>' +
 							'</tr>'
 						);
 					}
@@ -979,15 +1078,73 @@ function muestraNuevaTablaCompuesta(url,cantidad,tipo){
 					$('#tableModalTotalUser tbody').empty();
 					for(i = 0;i<items.length;i++){
 						num = parseInt(cantidad) + parseInt((i+1));
+						var nameUser = "Sin nombre de usuario"
+						if(items[i].name != null){
+							nameUser = items[i].name;	
+						}
+						var lastDatesUser = "Sin ultima conexion"
+						if(items[i].lastDate != null){
+							lastDatesUser = items[i].lastDate;	
+						}
 						$('#tableModalTotalUser tbody').append(
 							'<tr>' +
 								'<td>' + num + '</td>' +
 								'<td>' + items[i].email + '</td>' +
-								'<td>' + items[i].name + '</td>' +
+								'<td>' + nameUser + '</td>' +
+								'<td>' + lastDatesUser + '</td>' +
 							'</tr>'
 						);
 					}
               	break;
+				
+				case "dashnewusers":
+					items = data.items;
+					$('#tableModalNewUsers tbody').empty();
+					for(i = 0;i<items.length;i++){
+						num = parseInt(cantidad) + parseInt((i+1));
+						var nameUser = "Sin nombre de usuario"
+						if(items[i].name != null){
+							nameUser = items[i].name;	
+						}
+						var lastDatesUser = "Sin ultima conexion"
+						if(items[i].lastDate != null){
+							lastDatesUser = items[i].lastDate;	
+						}
+						$('#tableModalNewUsers tbody').append(
+							'<tr>' +
+								'<td>' + num + '</td>' +
+								'<td>' + items[i].email + '</td>' +
+								'<td>' + nameUser + '</td>' +
+								'<td>' + lastDatesUser + '</td>' +
+							'</tr>'
+						);
+					}
+              	break;
+				
+				case "dashactiveusers":
+					items = data.items;
+					$('#tableModalActiveUsers tbody').empty();
+					for(i = 0;i<items.length;i++){
+						num = parseInt(cantidad) + parseInt((i+1));
+						var nameUser = "Sin nombre de usuario"
+						if(items[i].name != null){
+							nameUser = items[i].name;	
+						}
+						var lastDatesUser = "Sin ultima conexion"
+						if(items[i].lastDate != null){
+							lastDatesUser = items[i].lastDate;	
+						}
+						$('#tableModalActiveUsers tbody').append(
+							'<tr>' +
+								'<td>' + num + '</td>' +
+								'<td>' + items[i].email + '</td>' +
+								'<td>' + nameUser + '</td>' +
+								'<td>' + lastDatesUser + '</td>' +
+							'</tr>'
+						);
+					}
+              	break;
+				
 			}            	
 		}
 	});	

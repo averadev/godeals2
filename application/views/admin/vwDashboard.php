@@ -32,10 +32,10 @@ $this->load->view('admin/vwHeader');
                         <div class="large-12 columns">
                             <div class="row collapse" style="margin-top: 10px;">
                                 <div class="small-10 columns">
-                                    <input type="text" value="Nuevos usuarios: 8" readonly>
+                                    <input type="text" value="Nuevos usuarios: <?php echo $UsersNew;?>" readonly>
                                 </div>
                                 <div class="small-2 columns">
-                                    <a href="#" class="button postfix" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
+                                    <a id="btnShowNewUsers" class="button postfix" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
                                 </div>
                                 <canvas id="ctxNewUsers" height="300" style="width: 100%; margin-top: -20px; background-color: #ffffff;"></canvas>
                             </div>
@@ -46,10 +46,10 @@ $this->load->view('admin/vwHeader');
                         <div class="large-12 columns"  style="margin-top: 12px;">
                             <div class="row collapse" style="margin-top: 10px;">
                                 <div class="small-10 columns">
-                                    <input type="text" value="Usuarios activos: 59%" readonly>
+                                    <input type="text" value="Usuarios activos: <?php echo round(($UsersActives * 100)/$TotalUser);?>%" readonly>
                                 </div>
                                 <div class="small-2 columns">
-                                    <a href="#" class="button postfix" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
+                                    <a id="btnShowActivesUsers" class="button postfix" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
                                 </div>
                                 <canvas id="ctxActives" height="300" style="width: 100%; margin-top: -20px; background-color: #ffffff;"></canvas>
                             </div>
@@ -73,7 +73,7 @@ $this->load->view('admin/vwHeader');
                                 <div class="large-12 columns">
                                     <div class="row collapse" style="margin-top: 10px;">
                                         <div class="small-10 columns">
-                                            <input type="text" value="Deals descargados: 123" readonly>
+                                            <input type="text" value="Deals descargados: <?php echo $DealsDescargados;?>" readonly>
                                         </div>
                                         <div class="small-2 columns">
                                             <a  id="dealsDescargado" class="button postfix btnShowDialogDash" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
@@ -87,7 +87,7 @@ $this->load->view('admin/vwHeader');
                                 <div class="large-12 columns">
                                     <div class="row collapse" style="margin-top: 10px;">
                                         <div class="small-10 columns">
-                                            <input type="text" value="Deals redimidos: 86" readonly>
+                                            <input type="text" value="Deals redimidos: <?php echo $DealsRedimidos;?>" readonly>
                                         </div>
                                         <div class="small-2 columns">
                                             <a id="dealsRedimidos" class="button postfix btnShowDialogDash" style=" background-repeat:no-repeat; background-position: center; background-image: url('<?php echo base_url().IMG; ?>web/btnSearch.png')">&nbsp;</a>
@@ -189,13 +189,14 @@ $this->load->view('admin/vwHeader');
 							<table id="tableDashModal" style="margin-top: 10px;" width="100%">
 								<thead>
 									<tr>
-										<td class="titulo" id="titleTableDashModal" colspan="3">Deals</td>
+										<td class="titulo" id="titleTableDashModal" colspan="5">Deals</td>
 									</tr>
 									<tr>
 										<th>#</th>
                                     	<th>Descripcion</th>
 										<th>Comercio</th>
-										<th># Deals</th>
+										<th id="typeNumberDeals"># Deals</th>
+                                        <th>Stock</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -229,8 +230,8 @@ $this->load->view('admin/vwHeader');
 										<th>#</th>
                                     	<th>Descripcion</th>
 										<th>Comercio</th>
-										<th>Total</th>
 										<th>Stock</th>
+                                        <th>Total</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -247,22 +248,38 @@ $this->load->view('admin/vwHeader');
         </div>
 		<!-------fin modal de deals activos---------->
 		
-		<!-------modal deals activos---------->
+		<!-------modal total de usuarios---------->
 		<div id="dialogDashTotalUser" title="Total de usuarios">
             <div class="row">
               	<div class="large-12 large-centered columns">
+                
+                	<!---- input search----->
+                    
+					<div class="row collapse bgSerach">
+            			<div class="small-8 medium-8 large-10 columns">
+                			<input type="search" class="txtSearch" id="txtSearchTypeUser" 
+                            	placeholder="Busqueda de usuarios por correo o nombre" style="font-size:14px;" />
+                		</div>
+                		<div class="small-4 medium-4 large-2 columns">
+                			<button class="btnSearch secondary" id="btnSearchTypeUSer" style="font-size:14px;">
+                            	<img src="assets/img/web/iconSearch.png">Buscar
+                           	</button>
+                		</div>
+					</div>
+                
 					<!----tabla del modal------>
 					<div class="row" style="margin-top:20px;">
                     	<div class="small-6 medium-6 large-12 columns">
 							<table id="tableModalTotalUser" style="margin-top: 10px;" width="100%">
 								<thead>
 									<tr>
-										<td class="titulo" id="titleTableDashModal" colspan="5">Total de usuarios</td>
+										<td class="titulo" id="titleTableDashModal" colspan="4">Total de usuarios</td>
 									</tr>
 									<tr>
 										<th>#</th>
-                                    	<th>email</th>
-										<th>name</th>
+                                    	<th>Email</th>
+										<th>Nombre</th>
+                                        <th>Ultima Conexion</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -277,9 +294,98 @@ $this->load->view('admin/vwHeader');
 				</div>
 			</div>
         </div>
-		<!-------fin modal de deals activos---------->
+		<!-------fin modal total de usuarios---------->
 		
-        
+		<!-------modal nuevos usuarios---------->
+		<div id="dialogDashNewUsers" title="Usuarios Nuevos">
+            <div class="row">
+              	<div class="large-12 large-centered columns">
+                	<!---- input search----->
+					<div class="row collapse bgSerach">
+            			<div class="small-8 medium-8 large-10 columns">
+                			<input type="search" class="txtSearch" id="txtSearchDNewUsers" 
+                            	placeholder="Busqueda de usuarios por correo o nombre" style="font-size:14px;" />
+                		</div>
+                		<div class="small-4 medium-4 large-2 columns">
+                			<button class="btnSearch secondary" id="btnSearchDNewUsers" style="font-size:14px;">
+                            	<img src="assets/img/web/iconSearch.png">Buscar
+                           	</button>
+                		</div>
+					</div>
+					<!----tabla del modal------>
+					<div class="row" style="margin-top:20px;">
+                    	<div class="small-6 medium-6 large-12 columns">
+							<table id="tableModalNewUsers" style="margin-top: 10px;" width="100%">
+								<thead>
+									<tr>
+										<td class="titulo" id="titleTableDashModal" colspan="4">Usuarios Nuevos</td>
+									</tr>
+									<tr>
+										<th>#</th>
+                                    	<th>Email</th>
+										<th>Nombre</th>
+                                        <th>Ultima Conexion</th>
+									</tr>
+								</thead>
+								<tbody>
+                                	
+								</tbody>
+							</table>
+                            <ul class="pagination" id="paginatorDashNewUsers">
+							</ul>
+                        </div>
+                    </div>
+					<!-----fin tabla modal------->
+				</div>
+			</div>
+        </div>
+		<!-------fin modal nuevos usuarios---------->
+		
+		<!-------modal usuarios activos---------->
+		<div id="dialogDashActiveUsers" title="Usuarios activos">
+            <div class="row">
+              	<div class="large-12 large-centered columns">
+                	<!---- input search----->
+					<div class="row collapse bgSerach">
+            			<div class="small-8 medium-8 large-10 columns">
+                			<input type="search" class="txtSearch" id="txtSearchDActiveUsers" 
+                            	placeholder="Busqueda de usuarios por correo o nombre" style="font-size:14px;" />
+                		</div>
+                		<div class="small-4 medium-4 large-2 columns">
+                			<button class="btnSearch secondary" id="btnSearchDActiveUsers" style="font-size:14px;">
+                            	<img src="assets/img/web/iconSearch.png">Buscar
+                           	</button>
+                		</div>
+					</div>
+					<!----tabla del modal------>
+					<div class="row" style="margin-top:20px;">
+                    	<div class="small-6 medium-6 large-12 columns">
+							<table id="tableModalActiveUsers" style="margin-top: 10px;" width="100%">
+								<thead>
+									<tr>
+										<td class="titulo" id="titleTableDashModal" colspan="4">Usuarios activos</td>
+									</tr>
+									<tr>
+										<th>#</th>
+                                    	<th>Email</th>
+										<th>Nombre</th>
+                                        <th>Ultima Conexion</th>
+									</tr>
+								</thead>
+								<tbody>
+                                	
+								</tbody>
+							</table>
+                            <ul class="pagination" id="paginatorDashActiveUsers">
+							</ul>
+                        </div>
+                    </div>
+					<!-----fin tabla modal------->
+				</div>
+			</div>
+        </div>
+		<!-------fin modal usuarios activos---------->
+		
     </div>
     <div class="small-12 medium-12 large-10 columns divContentInfo" id="vwCatalogDeals">
     	<div class="small-12 medium-12 large-12 columns">
@@ -296,6 +402,18 @@ $this->load->view('admin/vwHeader');
 	.dialogDash .ui-dialog-titlebar{
 		color:#FFF;	
 		background:#000;
+	}
+	
+	/*.dialogDash .ui-button .ui-button-text{
+		color:#FFF;	
+		background:#cf2a0e;
+		border-color:#cf2a0e;
+	}*/
+	
+	.dialogDashButtonCancel .ui-button-text{
+		color:#FFF;	
+		background:#cf2a0e;
+		border-color:#cf2a0e;
 	}
 	
 </style>

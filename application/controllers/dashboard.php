@@ -34,6 +34,10 @@ class Dashboard extends CI_Controller {
         $data['DealsR'] = $this->sliceArray($this->dashboard_db->getDealsRedimidos(), 10);
         $data['DealsActivos'] = $this->dashboard_db->getDealsActivos()[0]->total;
         $data['TotalUser'] = $this->dashboard_db->getTotalUser()[0]->total;
+		$data['UsersNew'] = $this->dashboard_db->getUserNew()[0]->total;
+		$data['UsersActives'] = $this->dashboard_db->getUsersActives()[0]->total;
+		$data['DealsDescargados'] = $this->dashboard_db->getDealsDownloads()[0]->total;
+		$data['DealsRedimidos'] = $this->dashboard_db->getDealsRedeemed()[0]->total;
         $this->load->view('admin/vwDashboard',$data);
 	}
     
@@ -196,6 +200,66 @@ class Dashboard extends CI_Controller {
 			$array = array_slice($data,$_POST['cantidad'], 10);
 			$message = array('items' => $array, 'total' => count($data));
 			echo json_encode($message);
+		}
+	}
+	
+	/**
+	 * obtiene la informacion de los usuarios nuevos de la app
+	 */
+	public function getInfoNewUser(){
+		if($this->input->is_ajax_request()){
+			$data = $this->dashboard_db->getInfoNewUser();
+			$array = array_slice($data,$_POST['cantidad'], 10);
+			$message = array('items' => $array, 'total' => count($data));
+			echo json_encode($message);
+		}
+	}
+	
+	/**
+	 * obtiene la informacion de los usuarios activos de la app
+	 */
+	public function getInfoActiveUser(){
+		if($this->input->is_ajax_request()){
+			$data = $this->dashboard_db->getInfoActiveUser();
+			$array = array_slice($data,$_POST['cantidad'], 10);
+			$message = array('items' => $array, 'total' => count($data));
+			echo json_encode($message);
+		}
+	}
+	
+	/**
+	 * obtiene la informacion de los usuarios por busqueda
+	 */
+	public function getInfoTotalUserBySearch(){
+		if($this->input->is_ajax_request()){
+			$data = $this->dashboard_db->getInfoTotalUserBySearch($_POST['dato'],$_POST['column'],$_POST['order']);
+		//	$array = array_slice($data,$_POST['cantidad'], 10);
+			//$message = array('items' => $array, 'total' => count($data));
+			echo json_encode($data);
+		}
+	}
+	
+	/**
+	 * obtiene la informacion de los usuarios nuevos por busqueda
+	 */
+	public function getInfoNewUserBySearch(){
+		if($this->input->is_ajax_request()){
+			$data = $this->dashboard_db->getInfoNewUserBySearch($_POST['dato'],$_POST['column'],$_POST['order']);
+		//	$array = array_slice($data,$_POST['cantidad'], 10);
+			//$message = array('items' => $array, 'total' => count($data));
+			echo json_encode($data);
+		}
+	}
+	
+	/**
+	 * obtiene la informacion de los usuarios activos por busqueda
+	 */
+	public function getInfoActiveUserBySearch(){
+		if($this->input->is_ajax_request()){
+			$data = $this->dashboard_db->getInfoActiveUserBySearch($_POST['dato'],$_POST['column'],$_POST['order']);
+		//	$array = array_slice($data,$_POST['cantidad'], 10);
+			//$message = array('items' => $array, 'total' => count($data));
+			echo json_encode($data);
 		}
 	}
 }
